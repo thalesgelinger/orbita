@@ -14,6 +14,9 @@ return {
             -- package.path = package.path .. ";" .. package_path
         end
 
-        os.execute("luajit " .. deps.main)
+        package.path = package.path .. ";./?.lua"      -- For individual Lua files
+        package.path = package.path .. ";./?/init.lua" -- For directories containing an init.lua
+
+        dofile(deps.main)
     end
 }
