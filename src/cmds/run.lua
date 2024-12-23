@@ -14,6 +14,6 @@ return {
             -- package.path = package.path .. ";" .. package_path
         end
 
-        print("RUN THIS ", args[1])
+        os.execute("luajit " .. deps.main)
     end
 }
