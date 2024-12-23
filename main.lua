@@ -2,7 +2,7 @@
 -- This implementation uses GitHub repositories directly for package management.
 package.cpath = package.cpath .. ";/Users/tgelin01/.asdf/installs/lua/5.1/luarocks/lib/lua/5.1/?.so"
 package.path = package.path ..
-";/Users/tgelin01/.luarocks/share/lua/5.1/?.lua;/Users/tgelin01/.luarocks/share/lua/5.1/?/init.lua"
+    ";/Users/tgelin01/.luarocks/share/lua/5.1/?.lua;/Users/tgelin01/.luarocks/share/lua/5.1/?/init.lua"
 package.cpath = package.cpath .. ";/Users/tgelin01/.luarocks/lib/lua/5.1/?.so"
 
 local orb = {}
@@ -111,6 +111,9 @@ end
 -- CLI Commands
 local function main()
     local cmd = arg[1]
+    for i, value in pairs(arg) do
+        print("I: ", i, "V: ", value)
+    end
     if cmd == "install" then
         orb.install(arg[2], arg[3])
     elseif cmd == "resolve" then
