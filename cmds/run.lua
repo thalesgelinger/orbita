@@ -6,9 +6,12 @@ return {
         local path = require "path"
         local deps = dofile(path.DEPENDENCY_FILE)
 
-        for repo, version in pairs(deps.dependencies) do
-            local package_path = string.format("%s/%s/%s/?.lua", path.ORBITE_HOME, repo:gsub("/", "-"), version)
-            package.path = package.path .. ";" .. package_path
+        for _, dep in pairs(deps.dependencies) do
+            if dep.path then
+                package.path = package.path .. ";" .. string.format("%s/?.lua", dep.path)
+            end
+            -- local package_path = string.format("%s/%s/%s/?.lua", path.ORBITE_HOME, repo:gsub("/", "-"), version)
+            -- package.path = package.path .. ";" .. package_path
         end
 
         dofile(file)

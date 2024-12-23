@@ -4,7 +4,7 @@ local Path = {}
 
 Path.ORBITE_HOME = os.getenv("ORBITE_HOME") or os.getenv("HOME") .. "/.orbite"
 Path.INDEX_FILE = Path.ORBITE_HOME .. "/index.json"
-Path.DEPENDENCY_FILE = "orb.lua"
+Path.DEPENDENCY_FILE = "Orbite"
 
 function Path.ensure_orbite_directory()
     if not lfs.attributes(Path.ORBITE_HOME, "mode") then
