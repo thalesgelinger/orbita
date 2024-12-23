@@ -1,27 +1,12 @@
-local socket = require "socket.http"
-local json = require "cjson"
-local path = require "path"
-
-local function save_global_index(index)
-    local f = io.open(path.INDEX_FILE, "w")
-    f:write(json.encode(index))
-    f:close()
-end
-
-local function fetch_package_from_github(repo, version)
-    local url = string.format("https://raw.githubusercontent.com/%s/%s/init.lua", repo, version)
-    local response, status = socket.request(url)
-    if status ~= 200 then
-        error("Failed to fetch package from GitHub repo: " .. repo .. " version: " .. version)
-    end
-    return response
-end
-
 return {
     "install",
     params = { "repo", "version" },
     description = "Install a specific package from GitHub",
     exec = function(args)
+        local socket = require "socket.http"
+        local json = require "cjson"
+        local path = require "path"
+
         local repo, version = args[1], args[2]
         path.ensure_orbite_directory()
         local index = path.load_global_index()
@@ -31,6 +16,15 @@ return {
             return
         end
 
+
+        local function fetch_package_from_github(repo, version)
+            local url = string.format("https://raw.githubusercontent.com/%s/%s/init.lua", repo, version)
+            local response, status = socket.request(url)
+            if status ~= 200 then
+                error("Failed to fetch package from GitHub repo: " .. repo .. " version: " .. version)
+            end
+            return response
+        end
         print(string.format("Fetching %s version %s from GitHub...", repo, version))
         local package_data = fetch_package_from_github(repo, version)
 
@@ -43,6 +37,11 @@ return {
 
         index[repo] = index[repo] or {}
         index[repo][version] = package_dir
+        local function save_global_index(index)
+            local f = io.open(path.INDEX_FILE, "w")
+            f:write(json.encode(index))
+            f:close()
+        end
         save_global_index(index)
 
         print(string.format("Installed %s version %s", repo, version))

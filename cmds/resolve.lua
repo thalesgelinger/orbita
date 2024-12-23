@@ -1,8 +1,8 @@
-local path = require "path"
 return {
     "resolve",
     description = "Resolve project dependencies",
     exec = function(...)
+        local path = require "path"
         local deps = dofile(path.DEPENDENCY_FILE)
         if not deps.dependencies then
             error("Invalid dependency file")
