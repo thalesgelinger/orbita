@@ -1,5 +1,6 @@
 build: 
-	@luajit -b main.lua main.out
+	@lua bundle.lua
+	@luajit -b build/orbite.lua main.out
 	@xxd -i main.out > main_lua.h
 	@mv main.out build/
 	@mv main_lua.h build/

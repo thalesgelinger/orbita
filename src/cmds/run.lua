@@ -2,7 +2,7 @@ return {
     "run",
     params = { "file" },
     description = "Run the project with resolved dependencies",
-    exec = function(file)
+    exec = function(args)
         local path = require "path"
         local deps = dofile(path.DEPENDENCY_FILE)
 
@@ -14,6 +14,6 @@ return {
             -- package.path = package.path .. ";" .. package_path
         end
 
-        dofile(file)
+        print("RUN THIS ", args[1])
     end
 }

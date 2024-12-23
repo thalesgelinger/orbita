@@ -5,16 +5,14 @@ package.path = package.path ..
     ";/Users/tgelin01/.luarocks/share/lua/5.1/?.lua;/Users/tgelin01/.luarocks/share/lua/5.1/?/init.lua"
 package.cpath = package.cpath .. ";/Users/tgelin01/.luarocks/lib/lua/5.1/?.so"
 
-local utils = require "utils"
-
 local function help()
     print("Usage: orb <command> [args]")
 
-    local cmds = utils.impot_cmds("cmds")
+    local cmds = require("cmds.init")
     local help_tbl = {}
 
     local max_usage_length = 0
-    for _, value in ipairs(cmds) do
+    for _, value in pairs(cmds) do
         local usage = "\t" .. value[1]
         if value.params then
             for _, param in ipairs(value.params) do
@@ -24,7 +22,7 @@ local function help()
         max_usage_length = math.max(max_usage_length, #usage)
     end
 
-    for _, value in ipairs(cmds) do
+    for _, value in pairs(cmds) do
         local usage = "\t" .. value[1]
         if value.params then
             for _, param in ipairs(value.params) do
@@ -54,15 +52,6 @@ local function main()
     end
     table.remove(arg, 1)
     fn.exec(arg)
-
-
-    -- if cmd == "install" then
-    --     orb.install(arg[2], arg[3])
-    -- elseif cmd == "resolve" then
-    --     orb.resolve_dependencies()
-    -- elseif cmd == "run" then
-    --     orb.run(arg[2])
-    -- end
 end
 
 main()
