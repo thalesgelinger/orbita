@@ -1,4 +1,82 @@
-![DALL·E 2024-12-23 16 05 37 - A simple, flat design logo-style illustration of a moon and its orbit  The moon is represented as a small, clean circle with minimal details, surround](https://github.com/user-attachments/assets/c200ced3-6884-4b3f-b209-f72dc5119354)
-
 # Orbite
-Maybe the package manager you've been looking for to use with this beaultiful language called lua
+<img src="https://github.com/user-attachments/assets/c200ced3-6884-4b3f-b209-f72dc5119354" alt="Orbite Logo" width="200"/>
+
+Orbite is a simple and beautiful package manager for Lua. It helps you manage your Lua projects and their dependencies directly from GitHub with minimal configuration. It is designed to make Lua project setup and execution easier, especially when dealing with dependency management.
+
+## Features
+
+- Start a new project: Easily initialize a new Lua project with the orb start command.
+- Dependency management: Resolve and install dependencies directly from GitHub using the orb resolve and orb install commands.
+- Run projects with resolved dependencies: No need to worry about modifying package.path—just run your project with orb run.
+- Customizable configuration: Define your project's dependencies in a Lua configuration file (Orbite file).
+
+## Installation
+
+To install and build Orbite, follow these steps:
+
+1. Clone the repository:
+```bash
+git clone https://github.com/your-username/orbite.git
+cd orbite
+```
+
+2. Build the project:
+
+If you have Makefile set up, you can run the build command:
+```bash
+make
+```
+
+This will:
+
+- Bundle Lua code using lua bundle.lua
+- Compile the Lua code into a binary with luajit
+- Create a header file (main_lua.h) from the binary
+- Compile the final program with GCC
+
+Clean the build (optional):
+```bash
+make clean
+```
+
+## Usage
+
+Once Orbite is installed, you can use the following commands:
+```bash
+orb start
+```
+
+Starts a new empty Orbite project. This will create a basic Orbite configuration file (Orbite.lua).
+```bash
+orb resolve
+```
+Resolves and installs your project's dependencies. Dependencies are defined in the Orbite.lua file.
+```bash
+orb run <file>
+```
+Runs the project with the resolved dependencies. No need to modify package.path—Orbite will handle it for you.
+```bash 
+orb install <repo> <version>
+```
+
+Installs a specific package from GitHub.
+Example Orbite configuration
+
+Here is an example configuration file for a Lua project managed by Orbite:
+```lua
+return {
+    name = "my-awesome-project",
+    version = "1.0.0",
+    description = "my awesome project description",
+    dependencies = {
+        { "lunarmodules/luasocket", path = "~/.luarocks/lib/lua/5.1/socket" }
+    },
+    author = "Thales Gelinger",
+    license = "MIT"
+}
+```
+
+In this example, the project "farol" depends on the luasocket module, which is defined with a custom path.
+License
+
+This project is licensed under the MIT License. See the LICENSE file for more details.
