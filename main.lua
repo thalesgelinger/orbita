@@ -8,6 +8,7 @@ package.cpath = package.cpath .. ";/Users/tgelin01/.luarocks/lib/lua/5.1/?.so"
 local orb = {}
 local lfs = require "lfs"            -- LuaFileSystem for directory operations
 local socket = require "socket.http" -- LuaSocket for HTTP requests
+local utils = require "utils"
 
 -- Global Constants
 local ORBITE_HOME = os.getenv("ORBITE_HOME") or os.getenv("HOME") .. "/.orbite"
@@ -110,23 +111,70 @@ end
 
 -- CLI Commands
 local function main()
-    local cmd = arg[1]
-    for i, value in pairs(arg) do
-        print("I: ", i, "V: ", value)
-    end
-    if cmd == "install" then
-        orb.install(arg[2], arg[3])
-    elseif cmd == "resolve" then
-        orb.resolve_dependencies()
-    elseif cmd == "run" then
-        orb.run(arg[2])
-    else
+    local cmd = arg[1] or ""
+
+    local status, fn = pcall(require, "cmds." .. cmd)
+
+    if not status then
         print("Usage: orb <command> [args]")
-        print("Commands:")
-        print("  install <repo> <version>   Install a specific package from GitHub")
-        print("  resolve                    Resolve project dependencies")
-        print("  run <entry_file>           Run the project with resolved dependencies")
+
+        -- Assuming 'utils.impot_cmds("cmds")' returns a list of command objects
+        local cmds = utils.impot_cmds("cmds")
+        local help_tbl = {}
+
+        -- Find the longest usage string to align columns
+        local max_usage_length = 0
+        for _, value in ipairs(cmds) do
+            local usage = "\t" .. value[1]
+            if value.params then
+                for _, param in ipairs(value.params) do
+                    usage = string.format("%s <%s>", usage, param)
+                end
+            end
+            max_usage_length = math.max(max_usage_length, #usage)
+        end
+
+        -- Format each usage and description to be side by side
+        for _, value in ipairs(cmds) do
+            local usage = "\t" .. value[1]
+            if value.params then
+                for _, param in ipairs(value.params) do
+                    usage = string.format("%s <%s>", usage, param)
+                end
+            end
+
+            -- Align the description based on the maximum usage length
+            local description = value.description or ""
+            local padding = string.rep(" ", max_usage_length - #usage)
+
+            -- Format and print the command and its description
+            table.insert(help_tbl, { usage .. padding, description })
+        end
+
+        -- Print the formatted help table
+        for _, entry in ipairs(help_tbl) do
+            print(entry[1] .. "  " .. entry[2])
+        end
+
+        return
     end
+    table.remove(arg, 1)
+    fn.exec(arg)
+
+
+    -- if cmd == "install" then
+    --     orb.install(arg[2], arg[3])
+    -- elseif cmd == "resolve" then
+    --     orb.resolve_dependencies()
+    -- elseif cmd == "run" then
+    --     orb.run(arg[2])
+    -- else
+    --     print("Usage: orb <command> [args]")
+    --     print("Commands:")
+    --     print("  install <repo> <version>   Install a specific package from GitHub")
+    --     print("  resolve                    Resolve project dependencies")
+    --     print("  run <entry_file>           Run the project with resolved dependencies")
+    -- end
 end
 
 main()
