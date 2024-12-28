@@ -5,6 +5,7 @@ edition = "2021"
 
 [dependencies]
 clap = { version = "4.5.23", features = ["derive"] }
+mlua = {version = "0.10.2", features = ["luajit"]}
 
 [[bin]]
 name = "orb"
