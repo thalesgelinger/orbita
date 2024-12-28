@@ -1,43 +1,26 @@
 use clap::{Parser, Subcommand};
 
-/// Simple program to perform various tasks
 #[derive(Parser, Debug)]
 #[command(version, about, long_about = None)]
 struct Args {
-    /// Subcommands
     #[command(subcommand)]
     command: Command,
 }
 
-/// Enum to represent different commands
 #[derive(Subcommand, Debug)]
 enum Command {
-    /// Initialize a project
-    Init {
-        /// Path to initialize the project at
-        #[arg(short, long)]
-        path: Option<String>,
-    },
+    Init,
 
-    /// Add a resource to the project
     Add {
-        /// Name of the resource to add
         #[arg(short, long)]
         resource_name: String,
     },
 
-    /// Resolve dependencies or tasks
-    Resolve {
-        /// Dependency to resolve
-        #[arg(short, long)]
-        dependency: String,
-    },
+    Resolve,
 
-    /// Run the project
     Run {
-        /// Run in debug mode
-        #[arg(short, long)]
-        debug: bool,
+        #[arg(value_name = "FILE", required = false)]
+        script: Option<String>,
     },
 }
 
@@ -45,21 +28,17 @@ fn main() {
     let args = Args::parse();
 
     match args.command {
-        Command::Init { path } => {
-            println!("Initializing project{}...", path.unwrap_or_else(|| " in the current directory".to_string()));
+        Command::Init   => {
+            println!("Initializing project...")
         }
         Command::Add { resource_name } => {
             println!("Adding resource: {}", resource_name);
         }
-        Command::Resolve { dependency } => {
-            println!("Resolving dependency: {}", dependency);
+        Command::Resolve  => {
+            println!("Resolving dependency:");
         }
-        Command::Run { debug } => {
-            if debug {
-                println!("Running in debug mode...");
-            } else {
-                println!("Running the project...");
-            }
+        Command::Run { script } => {
+            println!("Script: {:?}", script)
         }
     }
 }
