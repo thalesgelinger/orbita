@@ -1,4 +1,4 @@
-# Orbite
+# Orbita
 <img src="https://github.com/user-attachments/assets/c200ced3-6884-4b3f-b209-f72dc5119354" alt="Orbite Logo" width="200"/>
 
 Orbite is a simple and beautiful package manager for Lua. It helps you manage your Lua projects and their dependencies directly from GitHub with minimal configuration. It is designed to make Lua project setup and execution easier, especially when dealing with dependency management.
