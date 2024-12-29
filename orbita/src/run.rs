@@ -1,15 +1,13 @@
-use std::{fs, path::Path, sync::Arc};
-
-use mlua::{Error, Lua, Table};
+use std::{fs, sync::Arc};
 
 use crate::config::Config;
+use mlua::{Error, Lua, Table};
 
 pub fn run(script: Option<String>) -> Result<(), Error> {
     let lua = Lua::new();
     let config = Config::load()?;
 
-    // config.dependencies.into_iter().for_each(|dep| {
-    // });
+    include_dependencies_in_path(&lua, &config)?;
 
     match script {
         Some(s) => run_file(&lua, &s),
@@ -17,13 +15,32 @@ pub fn run(script: Option<String>) -> Result<(), Error> {
     }
 }
 
-fn run_file(lua: &Lua, script: &str) -> Result<(), Error> {
-    let script_dir = Path::new(script).parent().unwrap_or(Path::new("."));
-    let lua_path = format!("{}/?.lua", script_dir.display());
-
-    let _ = lua.globals().set("package", lua.create_table()?);
+fn include_dependencies_in_path(lua: &Lua, config: &Config) -> Result<(), Error> {
     let package = lua.globals().get::<Table>("package")?;
-    package.set("path", lua_path)?;
+
+    let mut package_path = package.get::<String>("path")?;
+
+    for dep in &config.dependencies {
+        if let Some(src) = &dep.src {
+            package_path.push_str(&format!(";{}/?.lua", src));
+            package_path.push_str(&format!(";{}/?/?.lua", src));
+        }
+    }
+
+    package.set("path", package_path)?;
+
+    Ok(())
+}
+
+fn run_file(lua: &Lua, script: &str) -> Result<(), Error> {
+    let package = lua.globals().get::<Table>("package")?;
+    let mut path = package.get::<String>("path")?;
+
+    let current_dir = std::env::current_dir()?.display().to_string();
+    path.push_str(&format!(";{}/?.lua", current_dir));
+    path.push_str(&format!(";{}/?/?.lua", current_dir));
+
+    package.set("path", path)?;
 
     let script_content = match fs::read_to_string(script) {
         Ok(content) => content,

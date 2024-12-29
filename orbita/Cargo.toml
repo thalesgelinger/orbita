@@ -5,8 +5,8 @@ edition = "2021"
 
 [dependencies]
 clap = { version = "4.5.23", features = ["derive"] }
-mlua = {version = "0.10.2", features = ["luajit"]}
+mlua = {version = "0.10.2", features = ["vendored", "luajit"]}
 
 [[bin]]
-name = "orb"
+name = "orbita"
 path = "src/main.rs"

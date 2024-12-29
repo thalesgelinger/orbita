@@ -12,9 +12,9 @@ use crate::DEPENDENCY_FILE;
 
 #[derive(Debug)]
 pub struct Dependency {
-    name: String,
-    version: Option<String>,
-    src: Option<String>,
+    pub name: String,
+    pub version: Option<String>,
+    pub src: Option<String>,
 }
 
 #[derive(Debug)]
