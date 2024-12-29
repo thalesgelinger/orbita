@@ -1,54 +1,6 @@
-use std::fs::File;
-use std::io::Write;
-use std::path::Path;
-use std::{env, io};
+use std::io;
 
-use crate::DEPENDENCY_FILE;
-
-#[derive(Debug)]
-struct Config {
-    name: String,
-    version: String,
-    description: String,
-    main: String,
-    dependencies: Vec<String>,
-    author: String,
-    license: String,
-}
-
-impl Config {
-    fn new() -> Self {
-        let current_directory = env::current_dir().unwrap_or_else(|_| Path::new(".").to_path_buf());
-        Config {
-            name: current_directory.to_string_lossy().to_string(),
-            version: "1.0.0".to_string(),
-            description: String::new(),
-            main: "main.lua".to_string(),
-            dependencies: Vec::new(),
-            author: String::new(),
-            license: "ISC".to_string(),
-        }
-    }
-
-    fn to_string(&self) -> String {
-        let mut result = String::from("{\n");
-        result.push_str(&format!("\tname = \"{}\",\n", self.name));
-        result.push_str(&format!("\tversion = \"{}\",\n", self.version));
-        result.push_str(&format!("\tdescription = \"{}\",\n", self.description));
-        result.push_str(&format!("\tmain = \"{}\",\n", self.main));
-        result.push_str("\tdependencies = {},\n");
-        result.push_str(&format!("\tauthor = \"{}\",\n", self.author));
-        result.push_str(&format!("\tlicense = \"{}\",\n", self.license));
-        result.push_str("}\n");
-        result
-    }
-
-    fn write(&self) -> io::Result<()> {
-        let mut file = File::create(DEPENDENCY_FILE)?;
-        file.write_all(format!("return {}\n", self.to_string()).as_bytes())?;
-        Ok(())
-    }
-}
+use crate::config::Config;
 
 pub fn init(skip: bool) {
     let mut args = std::env::args();

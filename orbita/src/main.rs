@@ -1,4 +1,5 @@
 pub mod add;
+pub mod config;
 pub mod init;
 pub mod resolve;
 pub mod run;
@@ -52,12 +53,11 @@ fn main() {
         Command::Init { yes } => init(yes),
         Command::Add { resource_name } => add(resource_name),
         Command::Resolve => resolve(),
-        Command::Run { script } => match script {
-            Some(s) => match run(&s) {
+        Command::Run { script } => 
+            match run(script) {
                 Ok(_) => (),
                 Err(e) => eprintln!("Error executing Lua script: {}", e),
-            },
-            None => todo!(),
-        },
+            }
+        ,
     }
 }
