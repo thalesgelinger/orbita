@@ -20,29 +20,36 @@ struct Args {
 #[derive(Subcommand, Debug)]
 enum Command {
     /// Initialize a project
-    Init,
+    Init {
+        /// Skip and use default config
+        #[arg(short, long)]
+        yes: bool,
+    },
 
     /// Add a resource to the project
     Add {
+        /// Resource Name
         #[arg(short, long)]
         resource_name: String,
     },
-    /// Resolve dependencies 
+    /// Resolve dependencies
     Resolve,
 
     /// Run the project with an optional Lua script
     Run {
-         /// Lua script to run (optional, default uses Orbita file)
+        /// Lua script to run (optional, default uses Orbita file)
         #[arg(value_name = "FILE", required = false)]
         script: Option<String>,
     },
 }
 
+pub const DEPENDENCY_FILE: &str = "Orbita";
+
 fn main() {
     let args = Args::parse();
 
     match args.command {
-        Command::Init => init(),
+        Command::Init { yes } => init(yes),
         Command::Add { resource_name } => add(resource_name),
         Command::Resolve => resolve(),
         Command::Run { script } => match script {
