@@ -1,8 +1,15 @@
+pub mod add;
+pub mod init;
+pub mod resolve;
 pub mod run;
 
+use add::add;
 use clap::{Parser, Subcommand};
+use init::init;
+use resolve::resolve;
 use run::run;
 
+/// Lua package manager
 #[derive(Parser, Debug)]
 #[command(version, about, long_about = None)]
 struct Args {
@@ -12,13 +19,20 @@ struct Args {
 
 #[derive(Subcommand, Debug)]
 enum Command {
+    /// Initialize a project
     Init,
+
+    /// Add a resource to the project
     Add {
         #[arg(short, long)]
         resource_name: String,
     },
+    /// Resolve dependencies 
     Resolve,
+
+    /// Run the project with an optional Lua script
     Run {
+         /// Lua script to run (optional, default uses Orbita file)
         #[arg(value_name = "FILE", required = false)]
         script: Option<String>,
     },
@@ -28,15 +42,9 @@ fn main() {
     let args = Args::parse();
 
     match args.command {
-        Command::Init => {
-            println!("Initializing project...")
-        }
-        Command::Add { resource_name } => {
-            println!("Adding resource: {}", resource_name);
-        }
-        Command::Resolve => {
-            println!("Resolving dependency:");
-        }
+        Command::Init => init(),
+        Command::Add { resource_name } => add(resource_name),
+        Command::Resolve => resolve(),
         Command::Run { script } => match script {
             Some(s) => match run(&s) {
                 Ok(_) => (),
