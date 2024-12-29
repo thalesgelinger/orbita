@@ -1,0 +1,12 @@
+return {
+    name = "/Users/thalesgelinger/Projects/orbita/orbita",
+    version = "1.0.0",
+    description = "",
+    main = "main.lua",
+    dependencies = {
+        -- { "dep1", src = "/Users/thalesgelinger/Projects/orbita" },
+    },
+    author = "",
+    license = "ISC",
+}
+
