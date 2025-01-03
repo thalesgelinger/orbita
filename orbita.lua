@@ -4,9 +4,8 @@ return {
     description = "",
     main = "main.lua",
     dependencies = {
-        -- { "dep1", src = "/Users/thalesgelinger/Projects/orbita" },
+        { "luamodules/luasocket", "v3.0" },
     },
     author = "",
     license = "ISC",
 }
-

@@ -88,16 +88,51 @@ impl Config {
     }
 
     fn to_string(&self) -> String {
-        let mut result = String::from("{\n");
+        let mut result = String::from("return {\n");
         result.push_str(&format!("\tname = \"{}\",\n", self.name));
         result.push_str(&format!("\tversion = \"{}\",\n", self.version));
         result.push_str(&format!("\tdescription = \"{}\",\n", self.description));
         result.push_str(&format!("\tmain = \"{}\",\n", self.main));
-        result.push_str("\tdependencies = {},\n");
+
+        result.push_str("\tdependencies = {\n");
+        for dep in &self.dependencies {
+            result.push_str("\t\t{ ");
+            result.push_str(&format!("\"{}\", ", dep.name));
+            if let Some(version) = &dep.version {
+                result.push_str(&format!("\"{}\"", version));
+            } else {
+                result.push_str("\"\"");
+            }
+            if let Some(src) = &dep.src {
+                result.push_str(&format!(", src = \"{}\"", src));
+            }
+            result.push_str(" },\n");
+        }
+        result.push_str("\t},\n");
+
         result.push_str(&format!("\tauthor = \"{}\",\n", self.author));
         result.push_str(&format!("\tlicense = \"{}\",\n", self.license));
         result.push_str("}\n");
         result
+    }
+
+    pub fn add_dependency(
+        &mut self,
+        name: String,
+        version: Option<String>,
+        src: Option<String>,
+    ) -> io::Result<()> {
+        if self.dependencies.iter().any(|dep| dep.name == name) {
+            println!("Dependency {} already exists in the configuration.", name);
+            return Ok(());
+        }
+
+        self.dependencies.push(Dependency { name, version, src });
+
+        self.write()?;
+
+        println!("Dependency added successfully!");
+        Ok(())
     }
 
     pub fn write(&self) -> io::Result<()> {

@@ -1,6 +1,7 @@
 use std::{fs, sync::Arc};
 
 use crate::config::Config;
+use crate::utils::get_orbita_base_dir;
 use mlua::{Error, Lua, Table};
 
 pub fn run(script: Option<String>) -> Result<(), Error> {
@@ -20,10 +21,19 @@ fn include_dependencies_in_path(lua: &Lua, config: &Config) -> Result<(), Error>
 
     let mut package_path = package.get::<String>("path")?;
 
+    let orbita_dir = get_orbita_base_dir();
+
     for dep in &config.dependencies {
         if let Some(src) = &dep.src {
             package_path.push_str(&format!(";{}/?.lua", src));
             package_path.push_str(&format!(";{}/?/?.lua", src));
+        } else if let Some(version) = &dep.version {
+            let dependency_path = orbita_dir.join("packages").join(&dep.name).join(version);
+
+            if dependency_path.exists() {
+                package_path.push_str(&format!(";{}/?.lua", dependency_path.display()));
+                package_path.push_str(&format!(";{}/?/?.lua", dependency_path.display()));
+            }
         }
     }
 

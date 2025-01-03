@@ -3,6 +3,7 @@ pub mod config;
 pub mod init;
 pub mod resolve;
 pub mod run;
+pub mod utils;
 
 use add::add;
 use clap::{Parser, Subcommand};
@@ -30,7 +31,7 @@ enum Command {
     /// Add a resource to the project
     Add {
         /// Resource Name
-        #[arg(short, long)]
+        #[arg(required = true)]
         resource_name: String,
     },
     /// Resolve dependencies
@@ -44,7 +45,7 @@ enum Command {
     },
 }
 
-pub const DEPENDENCY_FILE: &str = "Orbita";
+pub const DEPENDENCY_FILE: &str = "orbita.lua";
 
 fn main() {
     let args = Args::parse();
@@ -53,11 +54,9 @@ fn main() {
         Command::Init { yes } => init(yes),
         Command::Add { resource_name } => add(resource_name),
         Command::Resolve => resolve(),
-        Command::Run { script } => 
-            match run(script) {
-                Ok(_) => (),
-                Err(e) => eprintln!("Error executing Lua script: {}", e),
-            }
-        ,
+        Command::Run { script } => match run(script) {
+            Ok(_) => (),
+            Err(e) => eprintln!("Error executing Lua script: {}", e),
+        },
     }
 }
