@@ -5,9 +5,9 @@ Orbite is a simple and beautiful package manager for Lua. It helps you manage yo
 
 ## Features
 
-- Start a new project: Easily initialize a new Lua project with the orb start command.
-- Dependency management: Resolve and install dependencies directly from GitHub using the orb resolve and orb install commands.
-- Run projects with resolved dependencies: No need to worry about modifying package.path—just run your project with orb run.
+- Start a new project: Easily initialize a new Lua project with the orbita start command.
+- Dependency management: Resolve and install dependencies directly from GitHub using the orbita resolve and orbita install commands.
+- Run projects with resolved dependencies: No need to worry about modifying package.path—just run your project with orbita run.
 - Customizable configuration: Define your project's dependencies in a Lua configuration file (Orbite file).
 
 ## Installation
@@ -16,8 +16,8 @@ To install and build Orbite, follow these steps:
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/your-username/orbite.git
-cd orbite
+git clone https://github.com/your-username/orbita.git
+cd orbita
 ```
 
 2. Build the project:
@@ -43,20 +43,20 @@ make clean
 
 Once Orbite is installed, you can use the following commands:
 ```bash
-orb start
+orbita start
 ```
 
 Starts a new empty Orbite project. This will create a basic Orbite configuration file (Orbite.lua).
 ```bash
-orb resolve
+orbita resolve
 ```
 Resolves and installs your project's dependencies. Dependencies are defined in the Orbite.lua file.
 ```bash
-orb run <file>
+orbita run <file>
 ```
 Runs the project with the resolved dependencies. No need to modify package.path—Orbite will handle it for you.
 ```bash 
-orb install <repo> <version>
+orbita install <repo> <version>
 ```
 
 Installs a specific package from GitHub.
@@ -69,7 +69,7 @@ return {
     version = "1.0.0",
     description = "my awesome project description",
     dependencies = {
-        { "lunarmodules/luasocket", path = "~/.luarocks/lib/lua/5.1/socket" }
+        { "github.com/lunarmodules/luasocket" }
     },
     author = "Thales Gelinger",
     license = "MIT"
